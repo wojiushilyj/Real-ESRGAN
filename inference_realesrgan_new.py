@@ -7,7 +7,7 @@ from basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan import RealESRGANer
 
 
-def main():
+def funtion_main(img):
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', type=str, default='inputs', help='Input image or folder')
     parser.add_argument(
@@ -61,49 +61,53 @@ def main():
             arch='clean',
             channel_multiplier=2,
             bg_upsampler=upsampler)
-    os.makedirs(args.output, exist_ok=True)
+    # os.makedirs(args.output, exist_ok=True)
 
-    if os.path.isfile(args.input):
-        paths = [args.input]
+    # if os.path.isfile(args.input):
+    #     paths = [args.input]
+    # else:
+    #     paths = sorted(glob.glob(os.path.join(args.input, '*')))
+
+    # for idx, path in enumerate(paths):
+    # imgname, extension = os.path.splitext(os.path.basename(path))
+    # print('Testing', idx, imgname)
+    #
+    # img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+    if len(img.shape) == 3 and img.shape[2] == 4:
+        img_mode = 'RGBA'
     else:
-        paths = sorted(glob.glob(os.path.join(args.input, '*')))
+        img_mode = None
 
-    for idx, path in enumerate(paths):
-        imgname, extension = os.path.splitext(os.path.basename(path))
-        print('Testing', idx, imgname)
+    h, w = img.shape[0:2]
+    if max(h, w) > 1000 and args.netscale == 4:
+        import warnings
+        warnings.warn('The input image is large, try X2 model for better performance.')
+    if max(h, w) < 500 and args.netscale == 2:
+        import warnings
+        warnings.warn('The input image is small, try X4 model for better performance.')
 
-        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
-        if len(img.shape) == 3 and img.shape[2] == 4:
-            img_mode = 'RGBA'
+    try:
+        if args.face_enhance:
+            _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
         else:
-            img_mode = None
-
-        h, w = img.shape[0:2]
-        if max(h, w) > 1000 and args.netscale == 4:
-            import warnings
-            warnings.warn('The input image is large, try X2 model for better performance.')
-        if max(h, w) < 500 and args.netscale == 2:
-            import warnings
-            warnings.warn('The input image is small, try X4 model for better performance.')
-
-        try:
-            if args.face_enhance:
-                _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
-            else:
-                output, _ = upsampler.enhance(img, outscale=args.outscale)
-        except Exception as error:
-            print('Error', error)
-            print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
-        else:
-            if args.ext == 'auto':
-                extension = extension[1:]
-            else:
-                extension = args.ext
-            if img_mode == 'RGBA':  # RGBA images should be saved in png format
-                extension = 'png'
-            save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
-            cv2.imwrite(save_path, output)
+            output, _ = upsampler.enhance(img, outscale=args.outscale)
+            return output
+    except Exception as error:
+        print('Error', error)
+        print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
+        return None
+    # else:
+    #     if args.ext == 'auto':
+    #         extension = extension[1:]
+    #     else:
+    #         extension = args.ext
+    #     if img_mode == 'RGBA':  # RGBA images should be saved in png format
+    #         extension = 'png'
+        # save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
+        # cv2.imwrite(save_path, output)
 
 
 if __name__ == '__main__':
-    main()
+    img1 = cv2.imread(r'F:\Python\Real-ESRGAN\inputs\00003.png', cv2.IMREAD_UNCHANGED)
+    image=funtion_main(img1)
+    cv2.imwrite(R'F:\Python\Real-ESRGAN\results\1.jpg', image)
