@@ -8,12 +8,13 @@ from realesrgan import RealESRGANer
 
 
 def funtion_main(img):
+    basepath = os.path.dirname(__file__)
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', type=str, default='inputs', help='Input image or folder')
     parser.add_argument(
         '--model_path',
         type=str,
-        default='experiments/pretrained_models/RealESRGAN_x4plus.pth',
+        default=basepath+r'\experiments\pretrained_models\realesrgan_x4plus.pth',
         help='Path to the pre-trained model')
     parser.add_argument('--output', type=str, default='results', help='Output folder')
     parser.add_argument('--netscale', type=int, default=4, help='Upsample scale factor of the network')

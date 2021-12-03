@@ -8,7 +8,7 @@ import os
 import cv2
 
 from datetime import timedelta
-from  inference_realesrgan_new import funtion_main
+from inference_realesrgan_new import funtion_main
 # 设置允许的文件格式
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'JPG', 'PNG', 'bmp'])
 
