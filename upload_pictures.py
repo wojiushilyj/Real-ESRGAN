@@ -22,7 +22,7 @@ app = Flask(__name__)
 app.send_file_max_age_default = timedelta(seconds=1)
 
 
-@app.route('/upload', methods=['POST', 'GET'])  # 添加路由
+@app.route('/image_enhance', methods=['POST', 'GET'])  # 添加路由
 def upload():
     if request.method == 'POST':
         f = request.files['file']
@@ -43,9 +43,7 @@ def upload():
         response = make_response(image_data)
         response.headers['Content-Type'] = 'image/png'
         return response
-
     return render_template('upload.html')
-
 
 if __name__ == '__main__':
     # app.debug = True
