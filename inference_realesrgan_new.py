@@ -14,7 +14,8 @@ def funtion_main(img):
     parser.add_argument(
         '--model_path',
         type=str,
-        default=basepath+r'\experiments\pretrained_models\realesrgan_x4plus.pth',
+        default=basepath+r'\experiments\pretrained_models\RealESRGAN_x2plus.pth',
+        # default=basepath + r'\experiments\pretrained_models\RealESRNet_x4plus.pth',
         help='Path to the pre-trained model')
     parser.add_argument('--output', type=str, default='results', help='Output folder')
     parser.add_argument('--netscale', type=int, default=4, help='Upsample scale factor of the network')
@@ -109,6 +110,7 @@ def funtion_main(img):
 
 
 if __name__ == '__main__':
-    img1 = cv2.imread(r'F:\Python\Real-ESRGAN\inputs\00003.png', cv2.IMREAD_UNCHANGED)
-    image=funtion_main(img1)
-    cv2.imwrite(R'F:\Python\Real-ESRGAN\results\1.jpg', image)
+    pass
+    # img1 = cv2.imread(r'F:\Python\Real-ESRGAN\inputs\00003.png', cv2.IMREAD_UNCHANGED)
+    # image=funtion_main(img1)
+    # cv2.imwrite(R'F:\Python\Real-ESRGAN\results\1.jpg', image)
